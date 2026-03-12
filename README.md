@@ -1,7 +1,7 @@
 <h1 align="center">
   <img src="icon.ico" width="100" />
   <br>
-  Human Paste
+  Unlock Paste
   <br>
 </h1>
 
@@ -20,9 +20,9 @@
 
 ## 🚀 Overview
 
-Many modern websites, secure sandboxes, and remote terminals block clipboard pasting to force manual data entry or restrict automation. **Human Paste** circumvents these restrictions by acting as a virtual human.
+Many modern websites, secure sandboxes, and remote terminals block clipboard pasting to force manual data entry or restrict automation. **Unlock Paste** circumvents these restrictions by acting as a virtual human.
 
-Rather than injecting text instantly—which trips velocity checks and client-side listeners—Human Paste utilizes OS-level hardware events to physically type out your payload with dynamically calculated, human-like delays. Wrapped in a sleek, native Windows interface powered by `customtkinter`, it looks and feels like a professional toolkit.
+Rather than injecting text instantly—which trips velocity checks and client-side listeners—Unlock Paste utilizes OS-level hardware events to physically type out your payload with dynamically calculated, human-like delays. Wrapped in a sleek, native Windows interface powered by `customtkinter`, it looks and feels like a professional toolkit.
 
 ---
 
@@ -46,8 +46,8 @@ Rather than injecting text instantly—which trips velocity checks and client-si
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/sarthak3d/Human-Paste.git
-   cd Human-Paste
+   git clone https://github.com/sarthak3d/Unlock-Paste.git
+   cd Unlock-Paste
    ```
 
 2. **Set up a Virtual Environment (Recommended):**
@@ -98,7 +98,7 @@ Rather than injecting text instantly—which trips velocity checks and client-si
 
 ## ⚙️ How It Works
 
-Under the hood, Human Paste utilizes two primary concurrent threads. The Main Thread manages the `customtkinter` event loop to keep the UI responsive, while a Daemon Thread handles the OS interrupt.
+Under the hood, Unlock Paste utilizes two primary concurrent threads. The Main Thread manages the `customtkinter` event loop to keep the UI responsive, while a Daemon Thread handles the OS interrupt.
 
 When injection starts, the string is broken down. The `get_human_delay()` function evaluates the current character (`char`):
 - **Standard AlphaNumeric:** `0.04s - 0.12s` random delay
@@ -111,7 +111,7 @@ During the sleep cycles, the application periodically checks a `threading.Event(
 
 ## 🖥️ Platform Notes (macOS & Linux)
 
-Because Human Paste interacts with the Operating System at a hardware level to simulate physical keyboards and access the clipboard, non-Windows users must account for their OS security policies:
+Because Unlock Paste interacts with the Operating System at a hardware level to simulate physical keyboards and access the clipboard, non-Windows users must account for their OS security policies:
 
 ### 🍎 macOS
 Apple's strict security policies block programmatic keystrokes by default. You will need to explicitly grant **Accessibility Permissions** to the terminal or IDE you are running the script from:
@@ -128,7 +128,7 @@ Linux requires a couple of underlying packages to route hardware events and clip
 
 ## ⚠️ Disclaimer
 
-Human Paste hooks directly into Windows Core libraries to simulate physical hardware presses. 
+Unlock Paste hooks directly into Windows Core libraries to simulate physical hardware presses. 
 
 **Be incredibly careful where your cursor is during an active injection.**
 Triggering an injection without placing your cursor in the designated application could result in the payload being rapidly typed into sensitive applications, command lines, or active chat windows.

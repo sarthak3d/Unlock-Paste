@@ -15,12 +15,12 @@ RED = "#FF0033"
 BG_DARK = "#0d0d0d"
 ACCENT_GRAY = "#1a1a1a"
 
-class HumanTyperApp(ctk.CTk):
+class UnlockPasteApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         # Window Setup
-        self.title("Human Paste")
+        self.title("Unlock Paste")
         self.geometry("650x750")
         self.minsize(550, 650)
         self.configure(fg_color=BG_DARK)
@@ -36,7 +36,7 @@ class HumanTyperApp(ctk.CTk):
 
         # 1. Header
         self.header_label = ctk.CTkLabel(
-            self, text="Human Paste",
+            self, text="Unlock Paste",
             font=ctk.CTkFont(family="Courier New", size=32, weight="bold"),
             text_color=CYAN
         )
@@ -179,5 +179,5 @@ class HumanTyperApp(ctk.CTk):
         self.start_btn.configure(state="normal")
 
 if __name__ == "__main__":
-    app = HumanTyperApp()
+    app = UnlockPasteApp()
     app.mainloop()
