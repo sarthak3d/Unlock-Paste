@@ -28,11 +28,11 @@ class UnlockPasteApp(ctk.CTk):
         try:
             self.iconbitmap("icon.ico")
         except Exception:
-            pass # ignore missing icon
+            pass
         
         # Grid layout
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(3, weight=1) # The textbox should expand
+        self.grid_rowconfigure(3, weight=1)
 
         # 1. Header
         self.header_label = ctk.CTkLabel(
@@ -42,7 +42,7 @@ class UnlockPasteApp(ctk.CTk):
         )
         self.header_label.grid(row=0, column=0, padx=20, pady=(30, 20))
 
-        # 2. Controls Frame (Data Source)
+        # 2. Controls Frame
         self.source_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.source_frame.grid(row=1, column=0, padx=40, pady=(0, 10), sticky="ew")
         self.source_frame.grid_columnconfigure((0, 1), weight=1)
@@ -50,7 +50,7 @@ class UnlockPasteApp(ctk.CTk):
         self.paste_btn = ctk.CTkButton(
             self.source_frame, text="[ Paste from Clipboard ]", 
             fg_color="transparent", hover_color=ACCENT_GRAY, 
-            border_width=1, border_color=CYAN, text_color=CYAN,
+            border_width=1, border_color=MAGENTA, text_color=MAGENTA,
             font=ctk.CTkFont(family="Courier New", size=14, weight="bold"),
             command=self.paste_from_clipboard
         )
@@ -59,7 +59,7 @@ class UnlockPasteApp(ctk.CTk):
         self.upload_btn = ctk.CTkButton(
             self.source_frame, text="[ Upload .txt File ]", 
             fg_color="transparent", hover_color=ACCENT_GRAY, 
-            border_width=1, border_color=MAGENTA, text_color=MAGENTA,
+            border_width=1, border_color=CYAN, text_color=CYAN,
             font=ctk.CTkFont(family="Courier New", size=14, weight="bold"),
             command=self.load_file
         )
@@ -70,13 +70,16 @@ class UnlockPasteApp(ctk.CTk):
             self,
             font=ctk.CTkFont(family="Consolas", size=14),
             fg_color="#121212",
-            text_color="#00FF00", # Terminal green text
+            text_color="#FFFFFF",
             border_color=CYAN, 
             border_width=2
         )
         self.textbox.grid(row=3, column=0, padx=40, pady=(10, 20), sticky="nsew")
         self.textbox.insert("0.0", "AWAITING PAYLOAD INJECTION...")
         self.textbox.bind("<FocusIn>", self.clear_placeholder)
+        
+        # Live typing highlighting tag
+        self.textbox._textbox.tag_config("typed", foreground="#00FF00")
 
         # 4. Action Frame
         self.action_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -101,7 +104,7 @@ class UnlockPasteApp(ctk.CTk):
         )
         self.stop_btn.grid(row=0, column=1, padx=(10, 0), sticky="ew")
 
-        # 5. Cyberpunk Status / Countdown Display
+        # 5. Countdown Display
         self.status_display = ctk.CTkLabel(
             self, text="SYS.STATUS: [ READY ]", 
             font=ctk.CTkFont(family="Courier New", size=16, weight="bold"),
@@ -144,7 +147,15 @@ class UnlockPasteApp(ctk.CTk):
         
     def ui_completion_callback(self, chars_typed):
         self.after(0, lambda: self.status_display.configure(text=f"SYS.STATUS: [ INJECTION COMPLETE : {chars_typed} CHARS ]", text_color="#00FF00"))
-        self.after(0, lambda: self.start_btn.configure(state="normal"))
+        self.after(0, lambda: self.start_btn.configure(state="normal", text="START TYPING"))
+
+    def ui_progress_update(self, current_index):
+        """Applies progress color and scrolls to keep current character in view."""
+        def update():
+            idx = f"1.0 + {current_index}c"
+            self.textbox._textbox.tag_add("typed", "1.0", idx)
+            self.textbox._textbox.see(idx)
+        self.after(0, update)
 
     def start_typing_thread(self):
         text_to_type = self.textbox.get("0.0", "end-1c").strip()
@@ -152,15 +163,16 @@ class UnlockPasteApp(ctk.CTk):
             self.status_display.configure(text="SYS.STATUS: [ CANNOT INJECT : EMPTY PAYLOAD ]", text_color=RED)
             return
             
-        self.start_btn.configure(state="disabled")
+        self.start_btn.configure(state="disabled", text="TYPING...")
         
         def countdown_task():
             import time
             stop_typing_event.clear()
+            self.after(0, lambda: self.textbox._textbox.tag_remove("typed", "1.0", "end"))
             for i in range(10, 0, -1):
                 if stop_typing_event.is_set():
                     self.ui_status_update("SYS.STATUS: [ ABORTED DURING COUNTDOWN ]")
-                    self.after(0, lambda: self.start_btn.configure(state="normal"))
+                    self.after(0, lambda: self.start_btn.configure(state="normal", text="START TYPING"))
                     self.after(0, lambda: self.status_display.configure(text_color=RED))
                     return
                 # Formatting seconds with leading zero for aesthetic
@@ -168,7 +180,7 @@ class UnlockPasteApp(ctk.CTk):
                 time.sleep(1)
                 
             self.ui_status_update("SYS.STATUS: [ INJECTION COMMENCED ... DO NOT DISTURB ]")
-            type_string(text_to_type, self.ui_status_update, self.ui_completion_callback)
+            type_string(text_to_type, self.ui_status_update, self.ui_completion_callback, self.ui_progress_update)
 
         thread = threading.Thread(target=countdown_task, daemon=True)
         thread.start()
@@ -176,7 +188,7 @@ class UnlockPasteApp(ctk.CTk):
     def abort_typing(self):
         stop_typing_event.set()
         self.status_display.configure(text="SYS.STATUS: [ EMERGENCY ABORT TRIGGERED ]", text_color=RED)
-        self.start_btn.configure(state="normal")
+        self.start_btn.configure(state="normal", text="START TYPING")
 
 if __name__ == "__main__":
     app = UnlockPasteApp()

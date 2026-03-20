@@ -20,11 +20,12 @@ def get_human_delay(char):
     else:
         return random.uniform(0.04, 0.12)
 
-def type_string(text, status_callback=None, completion_callback=None):
+def type_string(text, status_callback=None, completion_callback=None, progress_callback=None):
     """
     The core typing loop that writes out the characters.
     status_callback(str): Optional function to call with progress updates.
     completion_callback(int): Optional function to call when finished.
+    progress_callback(int): Optional function to call with the current character index.
     """
     global is_typing
     is_typing = True
@@ -43,8 +44,11 @@ def type_string(text, status_callback=None, completion_callback=None):
             
         try:
             pyautogui.write(char)
+            if progress_callback:
+                progress_callback(i + 1)
         except Exception as e:
-            pass # ignore stray typings on locked os layers
+            pass 
+            # ignore stray typings on locked os layers
             
         # Update progress occasionally
         if status_callback and i % 50 == 0 and i > 0:

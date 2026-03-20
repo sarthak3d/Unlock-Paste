@@ -128,12 +128,12 @@ Linux requires a couple of underlying packages to route hardware events and clip
 
 ## ⚠️ Disclaimer
 
-Unlock Paste hooks directly into Windows Core libraries to simulate physical hardware presses. 
+Unlock Paste hooks directly into OS Core libraries to simulate physical hardware presses. 
 
 **Be incredibly careful where your cursor is during an active injection.**
 Triggering an injection without placing your cursor in the designated application could result in the payload being rapidly typed into sensitive applications, command lines, or active chat windows.
 
-**The creators assume no liability for accidental data injection, locked-out terminals, or misuse of this tool against terms of service.** Use responsibly and strictly for environments where you lack accessible copy-paste permissions.
+**The creator assume no liability for accidental data injection, locked-out terminals, or misuse of this tool against terms of service.** Use responsibly and strictly for environments where you lack accessible copy-paste permissions.
 
 ---
 
